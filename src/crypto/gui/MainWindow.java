@@ -13,9 +13,10 @@ import crypto.ciphers.Vigenere;
  */
 @SuppressWarnings("serial")
 public final class MainWindow extends JFrame implements ActionListener{
-	//Declarates the GUI components
+	//Declares the GUI components
 	private JPanel cipherOptionsPane;
 	private JPanel textBoxesPane;
+	private JPanel keyButtonsPane;
 	private JLabel inputLabel;
 	private JLabel keyLabel;
 	private JLabel cipherLabel;
@@ -47,6 +48,7 @@ public final class MainWindow extends JFrame implements ActionListener{
 		// Initializes the UI components
 		cipherOptionsPane = new JPanel();
 		textBoxesPane = new JPanel();
+		keyButtonsPane = new JPanel();
 		inputLabel = new JLabel("Input the text you want to encrypt/decrypt: ", JLabel.CENTER);
 		keyLabel = new JLabel("Key: ");
 		cipherLabel = new JLabel("Choose cipher: ", JLabel.CENTER);
@@ -70,11 +72,12 @@ public final class MainWindow extends JFrame implements ActionListener{
 		mainContainer.add(inputLabel);
 		mainContainer.add(textBoxesPane);
 		textBoxesPane.add(new JScrollPane(inputBox)); // Scrollable input box
-		textBoxesPane.add(new JScrollPane(outputTextBox)); // Scrollable ioutput box
-		mainContainer.add(keyLabel);
-		mainContainer.add(key);
-		mainContainer.add(encryptButton);
-		mainContainer.add(decryptButton);
+		textBoxesPane.add(new JScrollPane(outputTextBox)); // Scrollable output box
+		mainContainer.add(keyButtonsPane);
+		keyButtonsPane.add(keyLabel);
+		keyButtonsPane.add(key);
+		keyButtonsPane.add(encryptButton);
+		keyButtonsPane.add(decryptButton);
 		mainContainer.add(cipherOptionsPane);
 		cipherOptionsPane.add(cipherLabel);
 		cipherOptionsPane.add(caesarRB);
@@ -98,14 +101,8 @@ public final class MainWindow extends JFrame implements ActionListener{
      * @param e The action event triggered by the user interaction.
      */
 	public void actionPerformed(ActionEvent e) {
-		
 		// Handles logic for One-Time Pad cipher selection
 		if (oneTimePadRB.isSelected()) {
-			if(oneTimePadKeyGenerationMessage == false) {
-				// Display a message when One-Time Pad is selected
-	            key.setText("A one-time key will be generated!");
-	            oneTimePadKeyGenerationMessage = true;
-			}
             key.setEditable(false); // Disables key editing for One-Time Pad
             
 	        if (e.getSource() == encryptButton) {
@@ -114,10 +111,9 @@ public final class MainWindow extends JFrame implements ActionListener{
 	        
 	        else if (e.getSource() == decryptButton) {
 	            key.setEditable(true); // Unlocks key during decryption
-	            oneTimePadKeyGenerationMessage = false;
 	        }
 	    } 
-		// Reset the key text field when a different cipher is selected
+		// Resets the key text field when a different cipher is selected
 	    else if((caesarRB.isSelected() || vigenereRB.isSelected())
 	    		&& !(e.getSource() == encryptButton)
 	    		&& !(e.getSource() == decryptButton)) {
@@ -136,17 +132,17 @@ public final class MainWindow extends JFrame implements ActionListener{
 			caesar.getPlainText(userInputText); // Set the plaintext to Caesar cipher
 			
 			try {
-				// Ensure the user enters a positive encryption key
+				// Ensures the user enters a positive encryption key
 				do {
 				userEncryptionKey = Integer.parseInt(key.getText());
 				if(userEncryptionKey < 0) {
-					key.setText(""); // Reset key if it's negative
+					key.setText(""); // Resets key if it's negative
 				}
 				}while(userEncryptionKey < 0);
-				caesar.getKey(userEncryptionKey); // Set the encryption key to Caesar cipher
+				caesar.getKey(userEncryptionKey); // Sets the encryption key to Caesar cipher
 			}
 			catch(Exception ex) {
-				key.setText("Input a positive number!"); // Handle non-integer input
+				key.setText("Input a positive number!"); // Handles non-integer input
 			}
 			outputTextBox.setText(caesar.outputCipherText()); // Displays the encrypted text
 		}
@@ -174,14 +170,14 @@ public final class MainWindow extends JFrame implements ActionListener{
 			outputTextBox.setText(vigenere.outputCipherText()); // Displays the encrypted text
 		}
 		
-		// Handle encryption for One-Time Pad cipher
+		// Handles encryption for One-Time Pad cipher
 		else if(e.getSource() == encryptButton && oneTimePadRB.isSelected()) {
 			String userInputText;
 			
 			OneTimePad oneTimePad = new OneTimePad();
 			
-			userInputText = inputBox.getText(); // Get text input for encryption
-			oneTimePad.getPlainText(userInputText); // Set the plaintext to One-Time Pad cipher
+			userInputText = inputBox.getText(); // Gets text input for encryption
+			oneTimePad.getPlainText(userInputText); // Sets the plaintext to One-Time Pad cipher
 			
 			outputTextBox.setText(oneTimePad.outputCipherText()); // Displays the encrypted text
 			key.setText(oneTimePad.outputKey()); // Displays the randomly generated key for One-Time Pad
@@ -197,11 +193,11 @@ public final class MainWindow extends JFrame implements ActionListener{
 			userInputText = inputBox.getText(); // Gets text input for decryption
 			
 			try {
-				// Ensure the user enters a positive decryption key
+				// Ensures the user enters a positive decryption key
 				do {
 				userDecryptionKey = Integer.parseInt(key.getText());
 				if(userDecryptionKey < 0) {
-					key.setText(""); // Reset key if it's negative
+					key.setText(""); // Resets key if it's negative
 				}
 				}while(userDecryptionKey < 0);
 				caesar.getKey(userDecryptionKey); // Sets the decryption key to Caesar cipher
@@ -211,7 +207,7 @@ public final class MainWindow extends JFrame implements ActionListener{
 			}
 
 			caesar.getCipherText(userInputText); // Sets the ciphertext for Caesar cipher
-			outputTextBox.setText(caesar.outputPlainText()); // Display the decrypted text
+			outputTextBox.setText(caesar.outputPlainText()); // Displays the decrypted text
 		}
 		
 		// Handles decryption for Vigenere cipher

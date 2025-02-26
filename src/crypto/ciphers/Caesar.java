@@ -104,4 +104,3 @@ public final class Caesar {
 		return plainText.toString(); // Returns the plain text as a string
 	}
 }
-

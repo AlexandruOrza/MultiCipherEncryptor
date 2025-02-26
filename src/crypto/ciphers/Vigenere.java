@@ -120,4 +120,3 @@ public final class Vigenere {
 		return plainText.toString(); // Returns the plain text as a string
 	}
 }
-
